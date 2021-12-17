@@ -1,30 +1,44 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import { Button, CircularProgress } from '@mui/material';
 
-const App = () => (
-  <div className="App">
-    <header className="App-header">
-      <img src={logo} className="App-logo" alt="logo" />
+const App = () => {
+  const [isLoading, setIsLoading] = useState(false);
 
-      <p>
-        Edit
-        {' '}
-        <code>src/App.tsx</code>
-        {' '}
-        {' '}
-        and save to reload.
-      </p>
-      <a
-        className="App-link"
-        href="https://reactjs.org"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        Learn React
-      </a>
-    </header>
-  </div>
-);
+  const handleOnClick = () => {
+    setIsLoading(true);
+
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
+  };
+
+  return (
+    <Button
+      variant="contained"
+      disabled={isLoading}
+      onClick={handleOnClick}
+      endIcon={!isLoading && <ArrowForwardIcon />}
+      size="small"
+      style={{
+        height: 40,
+        width: 100,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: 10,
+        marginLeft: 10,
+      }}
+    >
+      {
+        isLoading ? (
+          <CircularProgress size={20} color="inherit" />
+        ) : (
+          <>Entrar</>
+        )
+      }
+    </Button>
+  );
+};
 
 export default App;
