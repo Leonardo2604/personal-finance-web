@@ -1,44 +1,59 @@
-import React, { useState } from 'react';
+import React from 'react';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { Button, CircularProgress } from '@mui/material';
+import { connect, useDispatch } from 'react-redux';
+import { types } from './store/ducks/auth';
 
-const App = () => {
-  const [isLoading, setIsLoading] = useState(false);
+type Props = {
+  isLoadingUser: boolean,
+  user: {
+    id: number,
+    name: string,
+    email: string,
+  } | null
+};
+
+const App = ({ isLoadingUser, user }: Props) => {
+  const dispatch = useDispatch();
 
   const handleOnClick = () => {
-    setIsLoading(true);
-
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 2000);
+    dispatch({ type: types.ASYNC_REQUEST_USER });
   };
 
   return (
-    <Button
-      variant="contained"
-      disabled={isLoading}
-      onClick={handleOnClick}
-      endIcon={!isLoading && <ArrowForwardIcon />}
-      size="small"
-      style={{
-        height: 40,
-        width: 100,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginTop: 10,
-        marginLeft: 10,
-      }}
-    >
-      {
-        isLoading ? (
-          <CircularProgress size={20} color="inherit" />
-        ) : (
-          <>Entrar</>
-        )
-      }
-    </Button>
+    <>
+      <Button
+        variant="contained"
+        disabled={isLoadingUser}
+        onClick={handleOnClick}
+        endIcon={!isLoadingUser && <ArrowForwardIcon />}
+        size="small"
+        style={{
+          height: 40,
+          width: 100,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          marginTop: 10,
+          marginLeft: 10,
+        }}
+      >
+        {
+          isLoadingUser ? (
+            <CircularProgress size={20} color="inherit" />
+          ) : (
+            <>Entrar</>
+          )
+        }
+      </Button>
+      {user && <span>{user.name}</span>}
+    </>
   );
 };
 
-export default App;
+const mapStateToProps = (state: any) => ({
+  user: state.auth.user,
+  isLoadingUser: state.auth.loading,
+});
+
+export default connect(mapStateToProps)(App);
