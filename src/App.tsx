@@ -1,59 +1,18 @@
 import React from 'react';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import { Button, CircularProgress } from '@mui/material';
-import { connect, useDispatch } from 'react-redux';
-import { types } from './store/ducks/auth';
+import { Provider } from 'react-redux';
+import { ThemeProvider, CssBaseline } from '@mui/material';
 
-type Props = {
-  isLoadingUser: boolean,
-  user: {
-    id: number,
-    name: string,
-    email: string,
-  } | null
-};
+import AppRoutes from './AppRoutes';
+import store from './store';
+import theme from './theme';
 
-const App = ({ isLoadingUser, user }: Props) => {
-  const dispatch = useDispatch();
+const App = () => (
+  <Provider store={store}>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <AppRoutes />
+    </ThemeProvider>
+  </Provider>
+);
 
-  const handleOnClick = () => {
-    dispatch({ type: types.ASYNC_REQUEST_USER });
-  };
-
-  return (
-    <>
-      <Button
-        variant="contained"
-        disabled={isLoadingUser}
-        onClick={handleOnClick}
-        endIcon={!isLoadingUser && <ArrowForwardIcon />}
-        size="small"
-        style={{
-          height: 40,
-          width: 100,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          marginTop: 10,
-          marginLeft: 10,
-        }}
-      >
-        {
-          isLoadingUser ? (
-            <CircularProgress size={20} color="inherit" />
-          ) : (
-            <>Entrar</>
-          )
-        }
-      </Button>
-      {user && <span>{user.name}</span>}
-    </>
-  );
-};
-
-const mapStateToProps = (state: any) => ({
-  user: state.auth.user,
-  isLoadingUser: state.auth.loading,
-});
-
-export default connect(mapStateToProps)(App);
+export default App;
